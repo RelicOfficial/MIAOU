@@ -1,5 +1,3 @@
-alert("TEST JAVASCRIPT");
-```javascript
 /* =========================================================
    MIAOU 🐾 — V1
    Main JavaScript
