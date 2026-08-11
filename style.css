@@ -293,25 +293,14 @@ p {
 }
 
 .logo {
-display: inline-flex;
-align-items: center;
-gap: 7px;
-
-font-size: 1.5rem;
-font-weight: 900;
-letter-spacing: -0.04em;
-
-color: var(--ink);
+    display: inline-flex;
+    align-items: center;
 }
 
 .logo img {
     width: 120px;
     height: auto;
     display: block;
-}
-
-.logo-paw {
-font-size: 1.35rem;
 }
 
 .main-nav {
