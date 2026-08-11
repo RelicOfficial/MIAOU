@@ -8,7 +8,7 @@
    VARIABLES
    ========================================================= */
 
-const cart = [];
+let cart = [];
 
 const mobileMenuButton = document.getElementById("mobileMenuButton");
 const mainNav = document.getElementById("mainNav");
@@ -32,33 +32,74 @@ const modalProductPrice = document.getElementById("modalProductPrice");
 
 const modalAddToCart = document.getElementById("modalAddToCart");
 
-
 let selectedModalProduct = null;
 
 
 /* =========================================================
-   MOBILE MENU
+   CHARGER LE PANIER SAUVEGARDÉ
+   ========================================================= */
+
+try {
+
+    const savedCart = localStorage.getItem("miaouCart");
+
+    if (savedCart) {
+        cart = JSON.parse(savedCart);
+    }
+
+} catch (error) {
+
+    cart = [];
+
+}
+
+
+/* =========================================================
+   SAUVEGARDER LE PANIER
+   ========================================================= */
+
+function saveCart() {
+
+    try {
+
+        localStorage.setItem(
+            "miaouCart",
+            JSON.stringify(cart)
+        );
+
+    } catch (error) {
+
+        console.log("Impossible de sauvegarder le panier.");
+
+    }
+
+}
+
+
+/* =========================================================
+   MENU MOBILE
    ========================================================= */
 
 if (mobileMenuButton && mainNav) {
 
     mobileMenuButton.addEventListener("click", () => {
 
-        const isOpen = mainNav.classList.toggle("active");
+        const isOpen =
+            mainNav.classList.toggle("active");
 
         mobileMenuButton.setAttribute(
             "aria-expanded",
             isOpen ? "true" : "false"
         );
 
-        mobileMenuButton.textContent = isOpen ? "✕" : "☰";
+        mobileMenuButton.textContent =
+            isOpen ? "✕" : "☰";
 
     });
 
 
-    /* Fermer le menu après avoir cliqué sur un lien */
-
-    const navLinks = mainNav.querySelectorAll("a");
+    const navLinks =
+        mainNav.querySelectorAll("a");
 
     navLinks.forEach(link => {
 
@@ -81,81 +122,12 @@ if (mobileMenuButton && mainNav) {
 
 
 /* =========================================================
-   PANIER — OUVRIR
-   ========================================================= */
-
-if (cartButton && cartOverlay) {
-
-    cartButton.addEventListener("click", () => {
-
-        cartOverlay.classList.add("active");
-
-        cartOverlay.setAttribute(
-            "aria-hidden",
-            "false"
-        );
-
-        document.body.style.overflow = "hidden";
-
-    });
-
-}
-
-
-/* =========================================================
-   PANIER — FERMER
-   ========================================================= */
-
-function closeCart() {
-
-    if (!cartOverlay) return;
-
-    cartOverlay.classList.remove("active");
-
-    cartOverlay.setAttribute(
-        "aria-hidden",
-        "true"
-    );
-
-    document.body.style.overflow = "";
-
-}
-
-
-if (cartClose) {
-
-    cartClose.addEventListener(
-        "click",
-        closeCart
-    );
-
-}
-
-
-/* Cliquer sur l'arrière-plan ferme le panier */
-
-if (cartOverlay) {
-
-    cartOverlay.addEventListener("click", (event) => {
-
-        if (event.target === cartOverlay) {
-
-            closeCart();
-
-        }
-
-    });
-
-}
-
-
-/* =========================================================
    FORMATAGE DU PRIX
    ========================================================= */
 
 function formatPrice(price) {
 
-    return price
+    return Number(price)
         .toFixed(2)
         .replace(".", ",") + " €";
 
@@ -163,40 +135,7 @@ function formatPrice(price) {
 
 
 /* =========================================================
-   AJOUTER AU PANIER
-   ========================================================= */
-
-function addToCart(name, price) {
-
-    const existingProduct = cart.find(
-        item => item.name === name
-    );
-
-
-    if (existingProduct) {
-
-        existingProduct.quantity += 1;
-
-    } else {
-
-        cart.push({
-            name: name,
-            price: price,
-            quantity: 1
-        });
-
-    }
-
-
-    updateCart();
-
-    openCart();
-
-}
-
-
-/* =========================================================
-   OUVRIR LE PANIER APRÈS AJOUT
+   OUVRIR LE PANIER
    ========================================================= */
 
 function openCart() {
@@ -216,6 +155,138 @@ function openCart() {
 
 
 /* =========================================================
+   FERMER LE PANIER
+   ========================================================= */
+
+function closeCart() {
+
+    if (!cartOverlay) return;
+
+    cartOverlay.classList.remove("active");
+
+    cartOverlay.setAttribute(
+        "aria-hidden",
+        "true"
+    );
+
+    document.body.style.overflow = "";
+
+}
+
+
+if (cartButton) {
+
+    cartButton.addEventListener(
+        "click",
+        openCart
+    );
+
+}
+
+
+if (cartClose) {
+
+    cartClose.addEventListener(
+        "click",
+        closeCart
+    );
+
+}
+
+
+/* Cliquer en dehors du panier */
+
+if (cartOverlay) {
+
+    cartOverlay.addEventListener(
+        "click",
+        event => {
+
+            if (event.target === cartOverlay) {
+                closeCart();
+            }
+
+        }
+    );
+
+}
+
+
+/* =========================================================
+   ANIMATION DU COMPTEUR
+   ========================================================= */
+
+function animateCartButton() {
+
+    if (!cartButton) return;
+
+    cartButton.animate(
+        [
+            {
+                transform: "scale(1)"
+            },
+            {
+                transform: "scale(1.15)"
+            },
+            {
+                transform: "scale(1)"
+            }
+        ],
+        {
+            duration: 300,
+            easing: "ease-out"
+        }
+    );
+
+}
+
+
+/* =========================================================
+   AJOUTER AU PANIER
+   ========================================================= */
+
+function addToCart(name, price) {
+
+    if (!name || isNaN(price)) {
+        return;
+    }
+
+
+    const existingProduct =
+        cart.find(item => item.name === name);
+
+
+    if (existingProduct) {
+
+        existingProduct.quantity += 1;
+
+    } else {
+
+        cart.push({
+
+            name: name,
+
+            price: Number(price),
+
+            quantity: 1
+
+        });
+
+    }
+
+
+    saveCart();
+
+    updateCart();
+
+    animateCartButton();
+
+    openCart();
+
+}
+
+
+/* =========================================================
    BOUTONS "AJOUTER"
    ========================================================= */
 
@@ -225,29 +296,28 @@ const addToCartButtons =
 
 addToCartButtons.forEach(button => {
 
-    button.addEventListener("click", () => {
+    button.addEventListener(
+        "click",
+        event => {
 
-        const productName =
-            button.dataset.product;
+            event.stopPropagation();
 
-        const productPrice =
-            parseFloat(button.dataset.price);
+            const productName =
+                button.dataset.product;
+
+            const productPrice =
+                parseFloat(
+                    button.dataset.price
+                );
 
 
-        if (
-            !productName ||
-            isNaN(productPrice)
-        ) {
-            return;
+            addToCart(
+                productName,
+                productPrice
+            );
+
         }
-
-
-        addToCart(
-            productName,
-            productPrice
-        );
-
-    });
+    );
 
 });
 
@@ -261,24 +331,28 @@ function updateCart() {
     if (!cartItems) return;
 
 
-    /* Calcul du nombre total d'articles */
+    /* Nombre total d'articles */
 
-    const totalQuantity = cart.reduce(
-        (total, item) => total + item.quantity,
-        0
-    );
-
-
-    /* Calcul du prix total */
-
-    const totalPrice = cart.reduce(
-        (total, item) =>
-            total + (item.price * item.quantity),
-        0
-    );
+    const totalQuantity =
+        cart.reduce(
+            (total, item) =>
+                total + item.quantity,
+            0
+        );
 
 
-    /* Compteur panier */
+    /* Prix total */
+
+    const totalPrice =
+        cart.reduce(
+            (total, item) =>
+                total +
+                (item.price * item.quantity),
+            0
+        );
+
+
+    /* Compteur */
 
     if (cartCount) {
 
@@ -327,7 +401,7 @@ function updateCart() {
     }
 
 
-    /* Panier avec produits */
+    /* Panier rempli */
 
     cartItems.innerHTML = "";
 
@@ -450,10 +524,10 @@ function updateCart() {
     });
 
 
-    /* Boutons quantité */
+    /* Boutons + / − */
 
     const quantityButtons =
-        document.querySelectorAll(
+        cartItems.querySelectorAll(
             ".cart-quantity-button"
         );
 
@@ -504,6 +578,8 @@ function updateCart() {
                 }
 
 
+                saveCart();
+
                 updateCart();
 
             }
@@ -528,8 +604,11 @@ function openProductModal(
 
 
     selectedModalProduct = {
+
         name: name,
-        price: price
+
+        price: Number(price)
+
     };
 
 
@@ -570,7 +649,7 @@ function openProductModal(
 
 
 /* =========================================================
-   FERMER MODAL
+   FERMER LE MODAL
    ========================================================= */
 
 function closeProductModal() {
@@ -603,7 +682,7 @@ if (productModal) {
 
     productModal.addEventListener(
         "click",
-        (event) => {
+        event => {
 
             if (
                 event.target === productModal
@@ -649,12 +728,68 @@ if (modalAddToCart) {
 
 
 /* =========================================================
-   FERMER AVEC LA TOUCHE ESC
+   OUVRIR LE MODAL EN CLIQUANT SUR UN PRODUIT
+   ========================================================= */
+
+const productCards =
+    document.querySelectorAll(".product-card");
+
+
+productCards.forEach(card => {
+
+    card.addEventListener(
+        "click",
+        event => {
+
+            /* Ne pas ouvrir le modal avec Ajouter */
+
+            if (
+                event.target.closest(".add-to-cart")
+            ) {
+                return;
+            }
+
+
+            const name =
+                card.dataset.product;
+
+            const price =
+                parseFloat(
+                    card.dataset.price
+                );
+
+            const description =
+                card.dataset.description;
+
+
+            if (
+                !name ||
+                isNaN(price) ||
+                !description
+            ) {
+                return;
+            }
+
+
+            openProductModal(
+                name,
+                price,
+                description
+            );
+
+        }
+    );
+
+});
+
+
+/* =========================================================
+   TOUCHE ESC
    ========================================================= */
 
 document.addEventListener(
     "keydown",
-    (event) => {
+    event => {
 
         if (event.key !== "Escape") {
             return;
@@ -670,7 +805,7 @@ document.addEventListener(
 
 
 /* =========================================================
-   BOUTON CHECKOUT
+   CHECKOUT
    ========================================================= */
 
 if (checkoutButton) {
@@ -690,8 +825,30 @@ if (checkoutButton) {
             }
 
 
+            const orderSummary =
+                cart
+                    .map(
+                        item =>
+                            `${item.name} × ${item.quantity} — ${formatPrice(item.price * item.quantity)}`
+                    )
+                    .join("\n");
+
+
+            const total =
+                cart.reduce(
+                    (sum, item) =>
+                        sum +
+                        (item.price * item.quantity),
+                    0
+                );
+
+
             alert(
-                "Le paiement sera bientôt disponible. Merci pour votre intérêt pour Miaou 🐾"
+                "Votre commande :\n\n" +
+                orderSummary +
+                "\n\nTotal : " +
+                formatPrice(total) +
+                "\n\nLe paiement sera bientôt disponible 🐾"
             );
 
         }
@@ -705,44 +862,3 @@ if (checkoutButton) {
    ========================================================= */
 
 updateCart();
-
-console.log("🐾 Miaou V1 — site chargé avec succès.");
-
-```
-
-/* =========================================================
-   OUVRIR LE MODAL EN CLIQUANT SUR UN PRODUIT
-   ========================================================= */
-
-const productCards = document.querySelectorAll(".product-card");
-
-productCards.forEach(card => {
-
-    card.addEventListener("click", (event) => {
-
-        /* Ne pas ouvrir le modal si on clique sur "Ajouter" */
-        if (event.target.closest(".add-to-cart")) {
-            return;
-        }
-
-        const name = card.dataset.product;
-        const price = parseFloat(card.dataset.price);
-        const description = card.dataset.description;
-
-        if (
-            !name ||
-            isNaN(price) ||
-            !description
-        ) {
-            return;
-        }
-
-        openProductModal(
-            name,
-            price,
-            description
-        );
-
-    });
-
-});
