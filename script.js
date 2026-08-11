@@ -712,3 +712,40 @@ console.log(
     "🐾 Miaou V1 — site chargé avec succès."
 );
 ```
+
+/* =========================================================
+   OUVRIR LE MODAL EN CLIQUANT SUR UN PRODUIT
+   ========================================================= */
+
+const productCards = document.querySelectorAll(".product-card");
+
+productCards.forEach(card => {
+
+    card.addEventListener("click", (event) => {
+
+        /* Ne pas ouvrir le modal si on clique sur "Ajouter" */
+        if (event.target.closest(".add-to-cart")) {
+            return;
+        }
+
+        const name = card.dataset.product;
+        const price = parseFloat(card.dataset.price);
+        const description = card.dataset.description;
+
+        if (
+            !name ||
+            isNaN(price) ||
+            !description
+        ) {
+            return;
+        }
+
+        openProductModal(
+            name,
+            price,
+            description
+        );
+
+    });
+
+});
