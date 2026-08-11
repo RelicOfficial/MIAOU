@@ -707,7 +707,8 @@ if (checkoutButton) {
    ========================================================= */
 
 updateCart();
-alert("🐾 Miaou fonctionne !");
+
+console.log("🐾 Miaou V1 — site chargé avec succès.");
 
 ```
 
