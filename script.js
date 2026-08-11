@@ -803,16 +803,15 @@ document.addEventListener(
     }
 );
 
-
 /* =========================================================
-   CHECKOUT
-   ========================================================= */
+CHECKOUT STRIPE
+========================================================= */
 
 if (checkoutButton) {
 
     checkoutButton.addEventListener(
         "click",
-        () => {
+        async () => {
 
             if (cart.length === 0) {
 
@@ -824,41 +823,82 @@ if (checkoutButton) {
 
             }
 
+            checkoutButton.disabled = true;
+            checkoutButton.textContent =
+                "Préparation du paiement...";
 
-            const orderSummary =
-                cart
-                    .map(
-                        item =>
-                            `${item.name} × ${item.quantity} — ${formatPrice(item.price * item.quantity)}`
-                    )
-                    .join("\n");
+            try {
 
+                const response = await fetch(
+                    "https://miaoustripe.wavesless07.workers.dev/",
+                    {
+                        method: "POST",
 
-            const total =
-                cart.reduce(
-                    (sum, item) =>
-                        sum +
-                        (item.price * item.quantity),
-                    0
+                        headers: {
+                            "Content-Type": "application/json"
+                        },
+
+                        body: JSON.stringify({
+                            cart: cart.map(item => ({
+                                name: item.name,
+                                quantity: item.quantity
+                            }))
+                        })
+                    }
                 );
 
 
-            alert(
-                "Votre commande :\n\n" +
-                orderSummary +
-                "\n\nTotal : " +
-                formatPrice(total) +
-                "\n\nLe paiement sera bientôt disponible 🐾"
-            );
+                const data =
+                    await response.json();
+
+
+                if (
+                    !response.ok ||
+                    !data.url
+                ) {
+
+                    throw new Error(
+                        data.error ||
+                        "Impossible de créer le paiement."
+                    );
+
+                }
+
+
+                /* Redirection vers Stripe */
+
+                window.location.href =
+                    data.url;
+
+
+            } catch (error) {
+
+                console.error(
+                    "Erreur checkout :",
+                    error
+                );
+
+
+                alert(
+                    "Une erreur est survenue lors de la préparation du paiement. Réessayez dans quelques instants 🐾"
+                );
+
+
+                checkoutButton.disabled = false;
+
+                checkoutButton.textContent =
+                    "Passer commande";
+
+            }
 
         }
     );
 
 }
 
-
 /* =========================================================
-   INITIALISATION
-   ========================================================= */
+INITIALISATION
+========================================================= */
 
 updateCart();
+
