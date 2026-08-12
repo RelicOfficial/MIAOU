@@ -1178,13 +1178,10 @@ if (checkoutButton) {
                     "Erreur checkout :",
                     error
                 );
-
-
                 alert(
-                    "Une erreur est survenue lors de la préparation du paiement. Réessayez dans quelques instants 🐾"
-                );
-
-
+    "Erreur : " + (error.message || "Erreur inconnue")
+);
+                
                 checkoutButton.disabled =
                     false;
 
