@@ -343,15 +343,23 @@ function updateCart() {
 
     /* Prix total */
 
-    const totalPrice =
-        cart.reduce(
-            (total, item) =>
-                total +
-                (item.price * item.quantity),
-            0
-        );
+   let totalPrice =
+    cart.reduce(
+        (total, item) =>
+            total +
+            (item.price * item.quantity),
+        0
+    );
 
+const priorityShipping =
+    localStorage.getItem(
+        "miaouPriorityShipping"
+    ) === "true";
 
+if (priorityShipping) {
+    totalPrice += 3;
+}
+   
     /* Compteur */
 
     if (cartCount) {
@@ -403,11 +411,212 @@ function updateCart() {
 
     /* Panier rempli */
 
-    cartItems.innerHTML = "";
+   /* Panier rempli */
+
+cartItems.innerHTML = "";
+
+cart.forEach((item, index) => {
+
+    const itemElement =
+        document.createElement("div");
+
+    itemElement.style.display = "flex";
+    itemElement.style.alignItems = "center";
+    itemElement.style.justifyContent = "space-between";
+    itemElement.style.gap = "12px";
+    itemElement.style.padding = "15px 0";
+    itemElement.style.borderBottom =
+        "1px solid var(--border)";
+
+    itemElement.innerHTML = `
+
+        <div style="flex:1;">
+
+            <strong
+                style="
+                    display:block;
+                    font-size:0.88rem;
+                    margin-bottom:4px;
+                "
+            >
+                ${item.name}
+            </strong>
+
+            <span
+                style="
+                    color:var(--muted);
+                    font-size:0.76rem;
+                "
+            >
+                ${formatPrice(item.price)}
+                × ${item.quantity}
+            </span>
+
+        </div>
+
+        <div
+            style="
+                display:flex;
+                align-items:center;
+                gap:7px;
+            "
+        >
+
+            <button
+                class="cart-quantity-button"
+                data-index="${index}"
+                data-action="decrease"
+                style="
+                    width:28px;
+                    height:28px;
+                    border:1px solid var(--border);
+                    border-radius:50%;
+                    background:white;
+                    cursor:pointer;
+                "
+            >
+                −
+            </button>
+
+            <span
+                style="
+                    min-width:20px;
+                    text-align:center;
+                    font-size:0.82rem;
+                    font-weight:800;
+                "
+            >
+                ${item.quantity}
+            </span>
+
+            <button
+                class="cart-quantity-button"
+                data-index="${index}"
+                data-action="increase"
+                style="
+                    width:28px;
+                    height:28px;
+                    border:1px solid var(--border);
+                    border-radius:50%;
+                    background:white;
+                    cursor:pointer;
+                "
+            >
+                +
+            </button>
+
+        </div>
+
+        <strong
+            style="
+                min-width:65px;
+                text-align:right;
+                font-size:0.85rem;
+            "
+        >
+            ${formatPrice(
+                item.price * item.quantity
+            )}
+        </strong>
+
+    `;
+
+    cartItems.appendChild(itemElement);
+
+});
 
 
-    cart.forEach((item, index) => {
+/* =========================================================
+   LIVRAISON PRIORITAIRE
+   ========================================================= */
 
+const priorityElement =
+    document.createElement("div");
+
+priorityElement.style.display = "flex";
+priorityElement.style.alignItems = "center";
+priorityElement.style.justifyContent = "space-between";
+priorityElement.style.gap = "10px";
+priorityElement.style.padding = "14px 0";
+priorityElement.style.borderBottom =
+    "1px solid var(--border)";
+
+priorityElement.innerHTML = `
+
+    <label
+        style="
+            display:flex;
+            align-items:center;
+            gap:10px;
+            cursor:pointer;
+            flex:1;
+        "
+    >
+
+        <input
+            type="checkbox"
+            id="priorityShipping"
+            style="
+                width:18px;
+                height:18px;
+                cursor:pointer;
+            "
+        >
+
+        <span
+            style="
+                font-size:0.82rem;
+                font-weight:700;
+            "
+        >
+            ⚡ Livraison prioritaire
+        </span>
+
+    </label>
+
+    <strong
+        style="
+            font-size:0.82rem;
+        "
+    >
+        +3,00 €
+    </strong>
+
+`;
+
+cartItems.appendChild(priorityElement);
+
+
+/* =========================================================
+   CHECKBOX LIVRAISON PRIORITAIRE
+   ========================================================= */
+
+const priorityCheckbox =
+    document.getElementById("priorityShipping");
+
+if (priorityCheckbox) {
+
+    priorityCheckbox.checked =
+        localStorage.getItem(
+            "miaouPriorityShipping"
+        ) === "true";
+
+    priorityCheckbox.addEventListener(
+        "change",
+        () => {
+
+            localStorage.setItem(
+                "miaouPriorityShipping",
+                priorityCheckbox.checked
+            );
+
+            updateCart();
+
+        }
+    );
+
+}
+   
         const itemElement =
             document.createElement("div");
 
