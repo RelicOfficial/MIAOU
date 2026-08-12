@@ -1,50 +1,76 @@
 /* =========================================================
-   MIAOU 🐾 — V1
-   Main JavaScript
-   ========================================================= */
+MIAOU 🐾 — V1
+Main JavaScript
+========================================================= */
 
 
 /* =========================================================
-   VARIABLES
-   ========================================================= */
+VARIABLES
+========================================================= */
 
 let cart = [];
 
-const mobileMenuButton = document.getElementById("mobileMenuButton");
-const mainNav = document.getElementById("mainNav");
+const mobileMenuButton =
+    document.getElementById("mobileMenuButton");
 
-const cartButton = document.getElementById("cartButton");
-const cartOverlay = document.getElementById("cartOverlay");
-const cartClose = document.getElementById("cartClose");
+const mainNav =
+    document.getElementById("mainNav");
 
-const cartItems = document.getElementById("cartItems");
-const cartCount = document.getElementById("cartCount");
-const cartTotal = document.getElementById("cartTotal");
+const cartButton =
+    document.getElementById("cartButton");
 
-const checkoutButton = document.getElementById("checkoutButton");
+const cartOverlay =
+    document.getElementById("cartOverlay");
 
-const productModal = document.getElementById("productModal");
-const modalClose = document.getElementById("modalClose");
+const cartClose =
+    document.getElementById("cartClose");
 
-const modalProductName = document.getElementById("modalProductName");
-const modalProductDescription = document.getElementById("modalProductDescription");
-const modalProductPrice = document.getElementById("modalProductPrice");
+const cartItems =
+    document.getElementById("cartItems");
 
-const modalAddToCart = document.getElementById("modalAddToCart");
+const cartCount =
+    document.getElementById("cartCount");
+
+const cartTotal =
+    document.getElementById("cartTotal");
+
+const checkoutButton =
+    document.getElementById("checkoutButton");
+
+const productModal =
+    document.getElementById("productModal");
+
+const modalClose =
+    document.getElementById("modalClose");
+
+const modalProductName =
+    document.getElementById("modalProductName");
+
+const modalProductDescription =
+    document.getElementById("modalProductDescription");
+
+const modalProductPrice =
+    document.getElementById("modalProductPrice");
+
+const modalAddToCart =
+    document.getElementById("modalAddToCart");
 
 let selectedModalProduct = null;
 
 
 /* =========================================================
-   CHARGER LE PANIER SAUVEGARDÉ
-   ========================================================= */
+CHARGER LE PANIER SAUVEGARDÉ
+========================================================= */
 
 try {
 
-    const savedCart = localStorage.getItem("miaouCart");
+    const savedCart =
+        localStorage.getItem("miaouCart");
 
     if (savedCart) {
+
         cart = JSON.parse(savedCart);
+
     }
 
 } catch (error) {
@@ -55,8 +81,8 @@ try {
 
 
 /* =========================================================
-   SAUVEGARDER LE PANIER
-   ========================================================= */
+SAUVEGARDER LE PANIER
+========================================================= */
 
 function saveCart() {
 
@@ -69,7 +95,9 @@ function saveCart() {
 
     } catch (error) {
 
-        console.log("Impossible de sauvegarder le panier.");
+        console.log(
+            "Impossible de sauvegarder le panier."
+        );
 
     }
 
@@ -77,44 +105,54 @@ function saveCart() {
 
 
 /* =========================================================
-   MENU MOBILE
-   ========================================================= */
+MENU MOBILE
+========================================================= */
 
 if (mobileMenuButton && mainNav) {
 
-    mobileMenuButton.addEventListener("click", () => {
+    mobileMenuButton.addEventListener(
+        "click",
+        () => {
 
-        const isOpen =
-            mainNav.classList.toggle("active");
+            const isOpen =
+                mainNav.classList.toggle("active");
 
-        mobileMenuButton.setAttribute(
-            "aria-expanded",
-            isOpen ? "true" : "false"
-        );
+            mobileMenuButton.setAttribute(
+                "aria-expanded",
+                isOpen ? "true" : "false"
+            );
 
-        mobileMenuButton.textContent =
-            isOpen ? "✕" : "☰";
+            mobileMenuButton.textContent =
+                isOpen ? "✕" : "☰";
 
-    });
+        }
+    );
 
 
     const navLinks =
         mainNav.querySelectorAll("a");
 
+
     navLinks.forEach(link => {
 
-        link.addEventListener("click", () => {
+        link.addEventListener(
+            "click",
+            () => {
 
-            mainNav.classList.remove("active");
+                mainNav.classList.remove(
+                    "active"
+                );
 
-            mobileMenuButton.setAttribute(
-                "aria-expanded",
-                "false"
-            );
+                mobileMenuButton.setAttribute(
+                    "aria-expanded",
+                    "false"
+                );
 
-            mobileMenuButton.textContent = "☰";
+                mobileMenuButton.textContent =
+                    "☰";
 
-        });
+            }
+        );
 
     });
 
@@ -122,8 +160,8 @@ if (mobileMenuButton && mainNav) {
 
 
 /* =========================================================
-   FORMATAGE DU PRIX
-   ========================================================= */
+FORMATAGE DU PRIX
+========================================================= */
 
 function formatPrice(price) {
 
@@ -135,8 +173,8 @@ function formatPrice(price) {
 
 
 /* =========================================================
-   OUVRIR LE PANIER
-   ========================================================= */
+OUVRIR LE PANIER
+========================================================= */
 
 function openCart() {
 
@@ -149,14 +187,15 @@ function openCart() {
         "false"
     );
 
-    document.body.style.overflow = "hidden";
+    document.body.style.overflow =
+        "hidden";
 
 }
 
 
 /* =========================================================
-   FERMER LE PANIER
-   ========================================================= */
+FERMER LE PANIER
+========================================================= */
 
 function closeCart() {
 
@@ -169,7 +208,8 @@ function closeCart() {
         "true"
     );
 
-    document.body.style.overflow = "";
+    document.body.style.overflow =
+        "";
 
 }
 
@@ -202,8 +242,12 @@ if (cartOverlay) {
         "click",
         event => {
 
-            if (event.target === cartOverlay) {
+            if (
+                event.target === cartOverlay
+            ) {
+
                 closeCart();
+
             }
 
         }
@@ -213,8 +257,8 @@ if (cartOverlay) {
 
 
 /* =========================================================
-   ANIMATION DU COMPTEUR
-   ========================================================= */
+ANIMATION DU COMPTEUR
+========================================================= */
 
 function animateCartButton() {
 
@@ -242,18 +286,22 @@ function animateCartButton() {
 
 
 /* =========================================================
-   AJOUTER AU PANIER
-   ========================================================= */
+AJOUTER AU PANIER
+========================================================= */
 
 function addToCart(name, price) {
 
     if (!name || isNaN(price)) {
+
         return;
+
     }
 
 
     const existingProduct =
-        cart.find(item => item.name === name);
+        cart.find(
+            item => item.name === name
+        );
 
 
     if (existingProduct) {
@@ -287,11 +335,13 @@ function addToCart(name, price) {
 
 
 /* =========================================================
-   BOUTONS "AJOUTER"
-   ========================================================= */
+BOUTONS "AJOUTER"
+========================================================= */
 
 const addToCartButtons =
-    document.querySelectorAll(".add-to-cart");
+    document.querySelectorAll(
+        ".add-to-cart"
+    );
 
 
 addToCartButtons.forEach(button => {
@@ -302,8 +352,10 @@ addToCartButtons.forEach(button => {
 
             event.stopPropagation();
 
+
             const productName =
                 button.dataset.product;
+
 
             const productPrice =
                 parseFloat(
@@ -323,15 +375,17 @@ addToCartButtons.forEach(button => {
 
 
 /* =========================================================
-   ACTUALISER LE PANIER
-   ========================================================= */
+ACTUALISER LE PANIER
+========================================================= */
 
 function updateCart() {
 
     if (!cartItems) return;
 
 
-    /* Nombre total d'articles */
+    /* =====================================================
+    NOMBRE TOTAL D'ARTICLES
+    ===================================================== */
 
     const totalQuantity =
         cart.reduce(
@@ -341,26 +395,45 @@ function updateCart() {
         );
 
 
-    /* Prix total */
+    /* =====================================================
+    PRIX TOTAL DES PRODUITS
+    ===================================================== */
 
-   let totalPrice =
-    cart.reduce(
-        (total, item) =>
-            total +
-            (item.price * item.quantity),
-        0
-    );
+    let totalPrice =
+        cart.reduce(
+            (total, item) =>
+                total +
+                (
+                    item.price *
+                    item.quantity
+                ),
+            0
+        );
 
-const priorityShipping =
-    localStorage.getItem(
-        "miaouPriorityShipping"
-    ) === "true";
 
-if (priorityShipping) {
-    totalPrice += 3;
-}
-   
-    /* Compteur */
+    /* =====================================================
+    LIVRAISON PRIORITAIRE
+    ===================================================== */
+
+    const priorityShipping =
+        localStorage.getItem(
+            "miaouPriorityShipping"
+        ) === "true";
+
+
+    if (
+        priorityShipping &&
+        cart.length > 0
+    ) {
+
+        totalPrice += 3;
+
+    }
+
+
+    /* =====================================================
+    COMPTEUR
+    ===================================================== */
 
     if (cartCount) {
 
@@ -370,7 +443,9 @@ if (priorityShipping) {
     }
 
 
-    /* Total */
+    /* =====================================================
+    TOTAL
+    ===================================================== */
 
     if (cartTotal) {
 
@@ -380,7 +455,9 @@ if (priorityShipping) {
     }
 
 
-    /* Panier vide */
+    /* =====================================================
+    PANIER VIDE
+    ===================================================== */
 
     if (cart.length === 0) {
 
@@ -397,343 +474,177 @@ if (priorityShipping) {
                 </h3>
 
                 <p>
-                    Ajoutez un petit plaisir pour votre chat.
+                    Ajoutez un petit plaisir
+                    pour votre chat.
                 </p>
 
             </div>
 
         `;
 
+
+        /* Si le panier est vide,
+           la livraison prioritaire
+           est automatiquement retirée */
+
+        localStorage.removeItem(
+            "miaouPriorityShipping"
+        );
+
+
         return;
 
     }
 
 
-    /* Panier rempli */
+    /* =====================================================
+    PANIER REMPLI
+    ===================================================== */
 
-   /* Panier rempli */
-
-cartItems.innerHTML = "";
-
-cart.forEach((item, index) => {
-
-    const itemElement =
-        document.createElement("div");
-
-    itemElement.style.display = "flex";
-    itemElement.style.alignItems = "center";
-    itemElement.style.justifyContent = "space-between";
-    itemElement.style.gap = "12px";
-    itemElement.style.padding = "15px 0";
-    itemElement.style.borderBottom =
-        "1px solid var(--border)";
-
-    itemElement.innerHTML = `
-
-        <div style="flex:1;">
-
-            <strong
-                style="
-                    display:block;
-                    font-size:0.88rem;
-                    margin-bottom:4px;
-                "
-            >
-                ${item.name}
-            </strong>
-
-            <span
-                style="
-                    color:var(--muted);
-                    font-size:0.76rem;
-                "
-            >
-                ${formatPrice(item.price)}
-                × ${item.quantity}
-            </span>
-
-        </div>
-
-        <div
-            style="
-                display:flex;
-                align-items:center;
-                gap:7px;
-            "
-        >
-
-            <button
-                class="cart-quantity-button"
-                data-index="${index}"
-                data-action="decrease"
-                style="
-                    width:28px;
-                    height:28px;
-                    border:1px solid var(--border);
-                    border-radius:50%;
-                    background:white;
-                    cursor:pointer;
-                "
-            >
-                −
-            </button>
-
-            <span
-                style="
-                    min-width:20px;
-                    text-align:center;
-                    font-size:0.82rem;
-                    font-weight:800;
-                "
-            >
-                ${item.quantity}
-            </span>
-
-            <button
-                class="cart-quantity-button"
-                data-index="${index}"
-                data-action="increase"
-                style="
-                    width:28px;
-                    height:28px;
-                    border:1px solid var(--border);
-                    border-radius:50%;
-                    background:white;
-                    cursor:pointer;
-                "
-            >
-                +
-            </button>
-
-        </div>
-
-        <strong
-            style="
-                min-width:65px;
-                text-align:right;
-                font-size:0.85rem;
-            "
-        >
-            ${formatPrice(
-                item.price * item.quantity
-            )}
-        </strong>
-
-    `;
-
-    cartItems.appendChild(itemElement);
-
-});
+    cartItems.innerHTML = "";
 
 
-/* =========================================================
-   LIVRAISON PRIORITAIRE
-   ========================================================= */
+    /* =====================================================
+    AFFICHER LES PRODUITS
+    ===================================================== */
 
-const priorityElement =
-    document.createElement("div");
+    cart.forEach(
+        (item, index) => {
 
-priorityElement.style.display = "flex";
-priorityElement.style.alignItems = "center";
-priorityElement.style.justifyContent = "space-between";
-priorityElement.style.gap = "10px";
-priorityElement.style.padding = "14px 0";
-priorityElement.style.borderBottom =
-    "1px solid var(--border)";
-
-priorityElement.innerHTML = `
-
-    <label
-        style="
-            display:flex;
-            align-items:center;
-            gap:10px;
-            cursor:pointer;
-            flex:1;
-        "
-    >
-
-        <input
-            type="checkbox"
-            id="priorityShipping"
-            style="
-                width:18px;
-                height:18px;
-                cursor:pointer;
-            "
-        >
-
-        <span
-            style="
-                font-size:0.82rem;
-                font-weight:700;
-            "
-        >
-            ⚡ Livraison prioritaire
-        </span>
-
-    </label>
-
-    <strong
-        style="
-            font-size:0.82rem;
-        "
-    >
-        +3,00 €
-    </strong>
-
-`;
-
-cartItems.appendChild(priorityElement);
+            const itemElement =
+                document.createElement("div");
 
 
-/* =========================================================
-   CHECKBOX LIVRAISON PRIORITAIRE
-   ========================================================= */
+            itemElement.style.display =
+                "flex";
 
-const priorityCheckbox =
-    document.getElementById("priorityShipping");
+            itemElement.style.alignItems =
+                "center";
 
-if (priorityCheckbox) {
+            itemElement.style.justifyContent =
+                "space-between";
 
-    priorityCheckbox.checked =
-        localStorage.getItem(
-            "miaouPriorityShipping"
-        ) === "true";
+            itemElement.style.gap =
+                "12px";
 
-    priorityCheckbox.addEventListener(
-        "change",
-        () => {
+            itemElement.style.padding =
+                "15px 0";
 
-            localStorage.setItem(
-                "miaouPriorityShipping",
-                priorityCheckbox.checked
+            itemElement.style.borderBottom =
+                "1px solid var(--border)";
+
+
+            itemElement.innerHTML = `
+
+                <div style="flex:1;">
+
+                    <strong
+                        style="
+                            display:block;
+                            font-size:0.88rem;
+                            margin-bottom:4px;
+                        "
+                    >
+                        ${item.name}
+                    </strong>
+
+
+                    <span
+                        style="
+                            color:var(--muted);
+                            font-size:0.76rem;
+                        "
+                    >
+                        ${formatPrice(item.price)}
+                        × ${item.quantity}
+                    </span>
+
+                </div>
+
+
+                <div
+                    style="
+                        display:flex;
+                        align-items:center;
+                        gap:7px;
+                    "
+                >
+
+                    <button
+                        class="cart-quantity-button"
+                        data-index="${index}"
+                        data-action="decrease"
+                        style="
+                            width:28px;
+                            height:28px;
+                            border:1px solid var(--border);
+                            border-radius:50%;
+                            background:white;
+                            cursor:pointer;
+                        "
+                    >
+                        −
+                    </button>
+
+
+                    <span
+                        style="
+                            min-width:20px;
+                            text-align:center;
+                            font-size:0.82rem;
+                            font-weight:800;
+                        "
+                    >
+                        ${item.quantity}
+                    </span>
+
+
+                    <button
+                        class="cart-quantity-button"
+                        data-index="${index}"
+                        data-action="increase"
+                        style="
+                            width:28px;
+                            height:28px;
+                            border:1px solid var(--border);
+                            border-radius:50%;
+                            background:white;
+                            cursor:pointer;
+                        "
+                    >
+                        +
+                    </button>
+
+                </div>
+
+
+                <strong
+                    style="
+                        min-width:65px;
+                        text-align:right;
+                        font-size:0.85rem;
+                    "
+                >
+                    ${formatPrice(
+                        item.price *
+                        item.quantity
+                    )}
+                </strong>
+
+            `;
+
+
+            cartItems.appendChild(
+                itemElement
             );
-
-            updateCart();
 
         }
     );
 
-}
-   
-        const itemElement =
-            document.createElement("div");
 
-
-        itemElement.style.display = "flex";
-        itemElement.style.alignItems = "center";
-        itemElement.style.justifyContent = "space-between";
-        itemElement.style.gap = "12px";
-        itemElement.style.padding = "15px 0";
-        itemElement.style.borderBottom =
-            "1px solid var(--border)";
-
-
-        itemElement.innerHTML = `
-
-            <div style="flex:1;">
-
-                <strong
-                    style="
-                        display:block;
-                        font-size:0.88rem;
-                        margin-bottom:4px;
-                    "
-                >
-                    ${item.name}
-                </strong>
-
-                <span
-                    style="
-                        color:var(--muted);
-                        font-size:0.76rem;
-                    "
-                >
-                    ${formatPrice(item.price)}
-                    × ${item.quantity}
-                </span>
-
-            </div>
-
-
-            <div
-                style="
-                    display:flex;
-                    align-items:center;
-                    gap:7px;
-                "
-            >
-
-                <button
-                    class="cart-quantity-button"
-                    data-index="${index}"
-                    data-action="decrease"
-                    style="
-                        width:28px;
-                        height:28px;
-                        border:1px solid var(--border);
-                        border-radius:50%;
-                        background:white;
-                        cursor:pointer;
-                    "
-                >
-                    −
-                </button>
-
-
-                <span
-                    style="
-                        min-width:20px;
-                        text-align:center;
-                        font-size:0.82rem;
-                        font-weight:800;
-                    "
-                >
-                    ${item.quantity}
-                </span>
-
-
-                <button
-                    class="cart-quantity-button"
-                    data-index="${index}"
-                    data-action="increase"
-                    style="
-                        width:28px;
-                        height:28px;
-                        border:1px solid var(--border);
-                        border-radius:50%;
-                        background:white;
-                        cursor:pointer;
-                    "
-                >
-                    +
-                </button>
-
-            </div>
-
-
-            <strong
-                style="
-                    min-width:65px;
-                    text-align:right;
-                    font-size:0.85rem;
-                "
-            >
-                ${formatPrice(
-                    item.price * item.quantity
-                )}
-            </strong>
-
-        `;
-
-
-        cartItems.appendChild(itemElement);
-
-    });
-
-
-    /* Boutons + / − */
+    /* =====================================================
+    BOUTONS + / -
+    ===================================================== */
 
     const quantityButtons =
         cartItems.querySelectorAll(
@@ -741,67 +652,194 @@ if (priorityCheckbox) {
         );
 
 
-    quantityButtons.forEach(button => {
+    quantityButtons.forEach(
+        button => {
 
-        button.addEventListener(
-            "click",
-            () => {
+            button.addEventListener(
+                "click",
+                () => {
 
-                const index =
-                    parseInt(
-                        button.dataset.index
-                    );
-
-                const action =
-                    button.dataset.action;
+                    const index =
+                        parseInt(
+                            button.dataset.index
+                        );
 
 
-                if (
-                    isNaN(index) ||
-                    !cart[index]
-                ) {
-                    return;
-                }
-
-
-                if (action === "increase") {
-
-                    cart[index].quantity += 1;
-
-                }
-
-
-                if (action === "decrease") {
-
-                    cart[index].quantity -= 1;
+                    const action =
+                        button.dataset.action;
 
 
                     if (
-                        cart[index].quantity <= 0
+                        isNaN(index) ||
+                        !cart[index]
                     ) {
 
-                        cart.splice(index, 1);
+                        return;
 
                     }
 
+
+                    if (
+                        action === "increase"
+                    ) {
+
+                        cart[index].quantity += 1;
+
+                    }
+
+
+                    if (
+                        action === "decrease"
+                    ) {
+
+                        cart[index].quantity -= 1;
+
+
+                        if (
+                            cart[index].quantity <= 0
+                        ) {
+
+                            cart.splice(
+                                index,
+                                1
+                            );
+
+                        }
+
+                    }
+
+
+                    saveCart();
+
+                    updateCart();
+
                 }
+            );
+
+        }
+    );
 
 
-                saveCart();
+    /* =====================================================
+    LIVRAISON PRIORITAIRE
+    TOUJOURS EN DERNIÈRE POSITION
+    ===================================================== */
+
+    const priorityElement =
+        document.createElement("div");
+
+
+    priorityElement.style.display =
+        "flex";
+
+    priorityElement.style.alignItems =
+        "center";
+
+    priorityElement.style.justifyContent =
+        "space-between";
+
+    priorityElement.style.gap =
+        "10px";
+
+    priorityElement.style.padding =
+        "14px 0";
+
+    priorityElement.style.borderBottom =
+        "1px solid var(--border)";
+
+
+    priorityElement.innerHTML = `
+
+        <label
+            style="
+                display:flex;
+                align-items:center;
+                gap:10px;
+                cursor:pointer;
+                flex:1;
+            "
+        >
+
+            <input
+                type="checkbox"
+                id="priorityShipping"
+                style="
+                    width:18px;
+                    height:18px;
+                    cursor:pointer;
+                "
+            >
+
+
+            <span
+                style="
+                    font-size:0.82rem;
+                    font-weight:700;
+                "
+            >
+                ⚡ Livraison prioritaire
+            </span>
+
+        </label>
+
+
+        <strong
+            style="
+                font-size:0.82rem;
+            "
+        >
+            +3,00 €
+        </strong>
+
+    `;
+
+
+    cartItems.appendChild(
+        priorityElement
+    );
+
+
+    /* =====================================================
+    CHECKBOX LIVRAISON PRIORITAIRE
+    ===================================================== */
+
+    const priorityCheckbox =
+        document.getElementById(
+            "priorityShipping"
+        );
+
+
+    if (priorityCheckbox) {
+
+        priorityCheckbox.checked =
+            localStorage.getItem(
+                "miaouPriorityShipping"
+            ) === "true";
+
+
+        priorityCheckbox.addEventListener(
+            "change",
+            () => {
+
+                localStorage.setItem(
+                    "miaouPriorityShipping",
+                    priorityCheckbox.checked
+                );
+
 
                 updateCart();
 
             }
         );
 
-    });
+    }
 
 }
 
 
 /* =========================================================
-   MODAL PRODUIT
-   ========================================================= */
+MODAL PRODUIT
+========================================================= */
 
 function openProductModal(
     name,
@@ -845,34 +883,45 @@ function openProductModal(
     }
 
 
-    productModal.classList.add("active");
+    productModal.classList.add(
+        "active"
+    );
+
 
     productModal.setAttribute(
         "aria-hidden",
         "false"
     );
 
-    document.body.style.overflow = "hidden";
+
+    document.body.style.overflow =
+        "hidden";
 
 }
 
 
 /* =========================================================
-   FERMER LE MODAL
-   ========================================================= */
+FERMER LE MODAL
+========================================================= */
 
 function closeProductModal() {
 
     if (!productModal) return;
 
-    productModal.classList.remove("active");
+
+    productModal.classList.remove(
+        "active"
+    );
+
 
     productModal.setAttribute(
         "aria-hidden",
         "true"
     );
 
-    document.body.style.overflow = "";
+
+    document.body.style.overflow =
+        "";
 
 }
 
@@ -908,8 +957,8 @@ if (productModal) {
 
 
 /* =========================================================
-   AJOUTER DEPUIS LE MODAL
-   ========================================================= */
+AJOUTER DEPUIS LE MODAL
+========================================================= */
 
 if (modalAddToCart) {
 
@@ -917,8 +966,12 @@ if (modalAddToCart) {
         "click",
         () => {
 
-            if (!selectedModalProduct) {
+            if (
+                !selectedModalProduct
+            ) {
+
                 return;
+
             }
 
 
@@ -937,11 +990,13 @@ if (modalAddToCart) {
 
 
 /* =========================================================
-   OUVRIR LE MODAL EN CLIQUANT SUR UN PRODUIT
-   ========================================================= */
+OUVRIR LE MODAL EN CLIQUANT SUR UN PRODUIT
+========================================================= */
 
 const productCards =
-    document.querySelectorAll(".product-card");
+    document.querySelectorAll(
+        ".product-card"
+    );
 
 
 productCards.forEach(card => {
@@ -950,22 +1005,29 @@ productCards.forEach(card => {
         "click",
         event => {
 
-            /* Ne pas ouvrir le modal avec Ajouter */
+            /* Ne pas ouvrir le modal
+               avec Ajouter */
 
             if (
-                event.target.closest(".add-to-cart")
+                event.target.closest(
+                    ".add-to-cart"
+                )
             ) {
+
                 return;
+
             }
 
 
             const name =
                 card.dataset.product;
 
+
             const price =
                 parseFloat(
                     card.dataset.price
                 );
+
 
             const description =
                 card.dataset.description;
@@ -976,7 +1038,9 @@ productCards.forEach(card => {
                 isNaN(price) ||
                 !description
             ) {
+
                 return;
+
             }
 
 
@@ -993,15 +1057,19 @@ productCards.forEach(card => {
 
 
 /* =========================================================
-   TOUCHE ESC
-   ========================================================= */
+TOUCHE ESC
+========================================================= */
 
 document.addEventListener(
     "keydown",
     event => {
 
-        if (event.key !== "Escape") {
+        if (
+            event.key !== "Escape"
+        ) {
+
             return;
+
         }
 
 
@@ -1011,6 +1079,7 @@ document.addEventListener(
 
     }
 );
+
 
 /* =========================================================
 CHECKOUT STRIPE
@@ -1022,7 +1091,9 @@ if (checkoutButton) {
         "click",
         async () => {
 
-            if (cart.length === 0) {
+            if (
+                cart.length === 0
+            ) {
 
                 alert(
                     "Votre panier est vide 🐾"
@@ -1032,29 +1103,50 @@ if (checkoutButton) {
 
             }
 
-            checkoutButton.disabled = true;
+
+            checkoutButton.disabled =
+                true;
+
             checkoutButton.textContent =
                 "Préparation du paiement...";
 
+
             try {
 
-                const response = await fetch(
-                    "https://miaoustripe.wavesless07.workers.dev/",
-                    {
-                        method: "POST",
+                const response =
+                    await fetch(
+                        "https://miaoustripe.wavesless07.workers.dev/",
+                        {
+                            method: "POST",
 
-                        headers: {
-                            "Content-Type": "application/json"
-                        },
+                            headers: {
+                                "Content-Type":
+                                    "application/json"
+                            },
 
-                        body: JSON.stringify({
-                            cart: cart.map(item => ({
-                                name: item.name,
-                                quantity: item.quantity
-                            }))
-                        })
-                    }
-                );
+                            body: JSON.stringify({
+
+                                cart: cart.map(
+                                    item => ({
+
+                                        name:
+                                            item.name,
+
+                                        quantity:
+                                            item.quantity
+
+                                    })
+                                ),
+
+                                priorityShipping:
+                                    localStorage.getItem(
+                                        "miaouPriorityShipping"
+                                    ) === "true"
+
+                            })
+
+                        }
+                    );
 
 
                 const data =
@@ -1093,7 +1185,8 @@ if (checkoutButton) {
                 );
 
 
-                checkoutButton.disabled = false;
+                checkoutButton.disabled =
+                    false;
 
                 checkoutButton.textContent =
                     "Passer commande";
@@ -1105,9 +1198,9 @@ if (checkoutButton) {
 
 }
 
+
 /* =========================================================
 INITIALISATION
 ========================================================= */
 
 updateCart();
-
