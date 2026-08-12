@@ -1152,20 +1152,19 @@ if (checkoutButton) {
                 const data =
                     await response.json();
 
-
                 if (
-                    !response.ok ||
-                    !data.url
-                ) {
+    !response.ok ||
+    !data.url
+) {
 
-                    throw new Error(
-                        data.error ||
-                        "Impossible de créer le paiement."
-                    );
+    throw new Error(
+        data.details ||
+        data.error ||
+        "Impossible de créer le paiement."
+    );
 
-                }
-
-
+}
+                
                 /* Redirection vers Stripe */
 
                 window.location.href =
