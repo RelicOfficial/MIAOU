@@ -375,6 +375,245 @@ addToCartButtons.forEach(button => {
 
 
 /* =========================================================
+GALERIE + VARIANTES — PRODUIT 3
+========================================================= */
+
+const productGalleryCards =
+    document.querySelectorAll(
+        ".product-card"
+    );
+
+
+productGalleryCards.forEach(card => {
+
+    const galleryImage =
+        card.querySelector(
+            ".product-gallery-image"
+        );
+
+    const previousButton =
+        card.querySelector(
+            ".product-image-prev"
+        );
+
+    const nextButton =
+        card.querySelector(
+            ".product-image-next"
+        );
+
+    const counter =
+        card.querySelector(
+            ".product-image-counter"
+        );
+
+    const variantButtons =
+        card.querySelectorAll(
+            ".product-variant"
+        );
+
+    const addButton =
+        card.querySelector(
+            ".add-to-cart"
+        );
+
+
+    /* Si ce n'est pas le produit 3,
+       on ne fait rien */
+
+    if (
+        !galleryImage ||
+        !previousButton ||
+        !nextButton ||
+        variantButtons.length === 0
+    ) {
+
+        return;
+
+    }
+
+
+    const variants = [
+
+        {
+            color: "Violet",
+            image: "PV.png",
+            alt: "Poulpe violet Miaou"
+        },
+
+        {
+            color: "Noir",
+            image: "PN.png",
+            alt: "Poulpe noir Miaou"
+        },
+
+        {
+            color: "Marron",
+            image: "PM.jpg",
+            alt: "Poulpe marron Miaou"
+        }
+
+    ];
+
+
+    let currentIndex = 0;
+
+
+    /* =====================================================
+       CHANGER DE VARIANTE
+       ===================================================== */
+
+    function setVariant(index) {
+
+        if (
+            index < 0 ||
+            index >= variants.length
+        ) {
+
+            return;
+
+        }
+
+
+        currentIndex = index;
+
+        const variant =
+            variants[currentIndex];
+
+
+        /* Image */
+
+        galleryImage.src =
+            variant.image;
+
+        galleryImage.alt =
+            variant.alt;
+
+
+        /* Compteur */
+
+        if (counter) {
+
+            counter.textContent =
+                `${currentIndex + 1} / ${variants.length}`;
+
+        }
+
+
+        /* Boutons couleur */
+
+        variantButtons.forEach(
+            (button, buttonIndex) => {
+
+                button.classList.toggle(
+                    "active",
+                    buttonIndex === currentIndex
+                );
+
+            }
+        );
+
+
+        /* Bouton panier */
+
+        if (addButton) {
+
+            addButton.dataset.product =
+                `Poulpe Miaou - ${variant.color}`;
+
+            addButton.dataset.price =
+                "8.90";
+
+            addButton.textContent =
+                `Ajouter le poulpe ${variant.color.toLowerCase()}`;
+
+        }
+
+    }
+
+
+    /* =====================================================
+       BOUTONS COULEUR
+       ===================================================== */
+
+    variantButtons.forEach(
+        (button, index) => {
+
+            button.addEventListener(
+                "click",
+                event => {
+
+                    event.stopPropagation();
+
+                    setVariant(index);
+
+                }
+            );
+
+        }
+    );
+
+
+    /* =====================================================
+       FLÈCHE GAUCHE
+       ===================================================== */
+
+    previousButton.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            currentIndex--;
+
+            if (
+                currentIndex < 0
+            ) {
+
+                currentIndex =
+                    variants.length - 1;
+
+            }
+
+            setVariant(currentIndex);
+
+        }
+    );
+
+
+    /* =====================================================
+       FLÈCHE DROITE
+       ===================================================== */
+
+    nextButton.addEventListener(
+        "click",
+        event => {
+
+            event.stopPropagation();
+
+            currentIndex++;
+
+            if (
+                currentIndex >= variants.length
+            ) {
+
+                currentIndex = 0;
+
+            }
+
+            setVariant(currentIndex);
+
+        }
+    );
+
+
+    /* État initial */
+
+    setVariant(0);
+
+});
+
+
+/* =========================================================
 ACTUALISER LE PANIER
 ========================================================= */
 
@@ -482,10 +721,6 @@ function updateCart() {
 
         `;
 
-
-        /* Si le panier est vide,
-           la livraison prioritaire
-           est automatiquement retirée */
 
         localStorage.removeItem(
             "miaouPriorityShipping"
@@ -722,7 +957,6 @@ function updateCart() {
 
     /* =====================================================
     LIVRAISON PRIORITAIRE
-    TOUJOURS EN DERNIÈRE POSITION
     ===================================================== */
 
     const priorityElement =
@@ -1005,12 +1239,18 @@ productCards.forEach(card => {
         "click",
         event => {
 
-            /* Ne pas ouvrir le modal
-               avec Ajouter */
+            /* Ne pas ouvrir le modal avec
+               les boutons de la galerie */
 
             if (
                 event.target.closest(
                     ".add-to-cart"
+                ) ||
+                event.target.closest(
+                    ".product-variant"
+                ) ||
+                event.target.closest(
+                    ".product-image-arrow"
                 )
             ) {
 
@@ -1152,19 +1392,21 @@ if (checkoutButton) {
                 const data =
                     await response.json();
 
+
                 if (
-    !response.ok ||
-    !data.url
-) {
+                    !response.ok ||
+                    !data.url
+                ) {
 
-    throw new Error(
-        data.details ||
-        data.error ||
-        "Impossible de créer le paiement."
-    );
+                    throw new Error(
+                        data.details ||
+                        data.error ||
+                        "Impossible de créer le paiement."
+                    );
 
-}
-                
+                }
+
+
                 /* Redirection vers Stripe */
 
                 window.location.href =
@@ -1177,10 +1419,17 @@ if (checkoutButton) {
                     "Erreur checkout :",
                     error
                 );
+
+
                 alert(
-    "Erreur : " + (error.message || "Erreur inconnue")
-);
-                
+                    "Erreur : " +
+                    (
+                        error.message ||
+                        "Erreur inconnue"
+                    )
+                );
+
+
                 checkoutButton.disabled =
                     false;
 
